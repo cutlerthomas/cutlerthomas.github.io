@@ -18,7 +18,7 @@
 
 3. REST Endpoints
     - Retrive char collection GET /chars
-    - Retrieve single char GET /chars/<id>
+    - Retrieve single char GET /chars/id
     - Create new char POST /chars
-    - Update char PUT /chars/<id>
-    - Delete char DELETE /chars/<id>>
+    - Update char PUT /chars/id
+    - Delete char DELETE /chars/id
