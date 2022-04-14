@@ -36,3 +36,6 @@
     - Delete char DELETE /chars/id
     - Create new user POST /users
     - login user/ create session POST /sessions
+
+4. Passwords
+    - Password hashing done with bcrypt()
