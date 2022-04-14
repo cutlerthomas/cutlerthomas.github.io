@@ -21,7 +21,7 @@ con.close()
 class opDB:
 
 
-    def __init__(self, filename):
+    def __init__(self):
         self.connection = sqlite3.connect("opChars_db.db")
         self.connection.row_factory = dict_factory
         self.cursor = self.connection.cursor()
@@ -59,3 +59,24 @@ class opDB:
         data = [char_id]
         self.cursor.execute("DELETE FROM opChars WHERE id = ?", data)
         self.connection.commit()
+
+class userDB:
+
+    def __init__(self):
+        self.connection = sqlite3.connect("opUsers_db.db")
+        self.connection.row_factory = dict_factory
+        self.cursor = self.connection.cursor()
+
+    def addUser(self, fisrtname, lastname, email, encrypted_password): 
+        data = [fisrtname, lastname, email, encrypted_password]
+        self.cursor.execute("INSERT INTO opUsers (firstname, lastname, email, encrypted_password) VALUES (?, ?, ?, ?)", data)
+        self.connection.commit()
+
+    def readAllUsers(self):
+        self.cursor.execute("SELECT * FROM opUsers")
+        return self.cursor.fetchall()
+
+    def findUserEmail(self, email):
+        data = [email]
+        self.cursor.execute("SELECT * FROM opUsers WHERE email = ?", data)
+        return self.cursor.fetchone()

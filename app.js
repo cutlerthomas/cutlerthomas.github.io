@@ -1,6 +1,6 @@
 console.log("One Piece database");
 var n = 1;
-var url = "http://localhost:8080/chars";
+var url = "http://localhost:8080/";
 var listDiv = document.getElementById("favList");
 var ul = document.createElement("ul");
 var add = document.querySelector("#my-button");
@@ -11,6 +11,17 @@ add.onclick = function() {
     postData();
 }
 
+var register = document.querySelector("#reg-button");
+console.log("register user")
+register.onclick = function() {
+    registerUser();
+}
+
+var login = document.querySelector("#log-button");
+console.log("login user")
+login.onclick = function() {
+    loginUser();
+}
 
 clear.onclick = function() {
     var empty = "";
@@ -22,15 +33,77 @@ clear.onclick = function() {
         document.getElementById("op-df").value = empty;
 }
 
+function registerUser() {
+    var firstName = document.getElementById("firstname").value;
+    var lastName = document.getElementById("lastname").value; 
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var data = "firstname=" + encodeURIComponent(firstName);
+    data += "&lastname=" + encodeURIComponent(lastName);
+    data += "&email=" + encodeURIComponent(email);
+    data += "&encrypted_password=" + encodeURIComponent(password);
+    fetch(url + "users", {
+        method: "POST",
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        credentials: "include",
+        body: data,
+    }).then(function (response) {
+        if (response.status == 201) {
+            alert("Succesfully registered new account!")
+        }
+        else if (response.status == 409) {
+            alert("Email already registered to existing account. Please login or use different email.")
+        }
+    })
+}
+
+function loginUser() {
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var data = "&email=" + encodeURIComponent(email);
+    data += "&encrypted_password=" + encodeURIComponent(password);
+    fetch(url + "sessions", {
+        method: "POST",
+        headers: {'Content-Type': 'application/x-www-rorm-urlencoded'},
+        credentials: "include",
+        body: data,
+    }).then(function (response) {
+        if (response.status == 201) {
+            loadCharList();
+        }
+        else if (response.status == 401) {
+            alert("Incorrect login credentials, please try again.")
+        }
+    });
+}
+
 
 function loadCharList() {
-    fetch(url).then(function (response) {
-        response.json().then(function (data) {
-            console.log("from the server:", data);
-            favList = data;
-            reBuildList();
-        });
-    });
+    var but = document.getElementById("butArea")
+    var list = document.getElementById("favList")
+    var conf = document.getElementById("confirm")
+    var log =  document.getElementById("login")
+    fetch(url + "chars", {
+        credentials: "include"
+    }).then(function (response) {
+        if (response.status == 200) 
+            but.style.display = "block";
+            list.style.display = "block";
+            conf.style.display = "block";
+            log.style.display = "none";
+            response.json()
+            .then(function (data) {
+                console.log("from the server:", data);
+                favList = data;
+                reBuildList(favList);
+            });
+        if (response.status == 401) {
+            but.style.display = "none";
+            list.style.display = "none";
+            conf.style.display = "none";
+            log.style.display = "block";
+        }
+    });  
 }
 
 function postData() {
@@ -46,8 +119,9 @@ function postData() {
     data += "&weight=" + encodeURIComponent(weightValue);
     data += "&affiliation=" + encodeURIComponent(affiliationValue);
     data += "&df=" + encodeURIComponent(dfValue);
-    fetch(url, {
+    fetch(url + "chars", {
         method: "POST",
+        credentials: "include",
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: data,
     }).then(function (response) {
@@ -55,7 +129,7 @@ function postData() {
     });
 }
 
-function reBuildList() {
+function reBuildList(favList) {
     listDiv.innerHTML = "";
     favList.forEach(function (char) {
         var li = document.createElement("li");
@@ -101,8 +175,9 @@ function reBuildList() {
 }
 
 function deleteChar(char_id) {
-    fetch(url + "/" + char_id, {
-        method: "DELETE"
+    fetch(url + "chars" + "/" + char_id, {
+        method: "DELETE",
+        credentials: "include"
     }).then(function(response) {
         if (response.status == 200) {
             console.log("character succesfully deleted");
@@ -142,9 +217,10 @@ function editChar(char_id) {
         data += "&weight=" + encodeURIComponent(weightValue);
         data += "&affiliation=" + encodeURIComponent(affiliationValue);
         data += "&df=" + encodeURIComponent(dfValue);
-        fetch(url + "/" + char_id, {
+        fetch(url + "chars" + "/" + char_id, {
             method: "PUT",
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            credentials: "include",
             body: data,
         }).then(function (response) {
             if (response.status == 200) {
@@ -156,3 +232,12 @@ function editChar(char_id) {
 }
 
 loadCharList();
+
+
+// When page loads
+//  1. load chars
+//      if successful, status code 200
+//          hide anything to do with login/register, show resource stuff
+//      else, status code 401
+//          hide any resource, show login
+//          2. When user logs in, restart from 1
