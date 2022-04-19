@@ -1,4 +1,5 @@
 import email
+import sys
 from functools import WRAPPER_ASSIGNMENTS
 from http import server
 from http import cookies
@@ -6,6 +7,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
 import ssl
 from urllib.parse import parse_qs
+from xmlrpc.client import ProtocolError
 from opDB import opDB, userDB
 from logging.config import listen
 import json
@@ -292,7 +294,16 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     pass
 
 def run():
-    listen = ("127.0.0.1", 8080)
+    db = opDB()
+    db.createCharsTable()
+    db = None
+    db = userDB()
+    db.createUsersTable()
+    db = None
+    port = 8080
+    if len(sys.argv) > 1:
+        port = int(sys.argv[1])
+    listen = ("0.0.0.0", port)
     server = ThreadedHTTPServer(listen, myRequestHandler)
     print("Server running")
     server.serve_forever()
