@@ -79,8 +79,18 @@ class opDB:
 class userDB:
 
     def __init__(self):
-        self.connection = sqlite3.connect("opUsers_db.db")
-        self.connection.row_factory = dict_factory
+        #self.connection = sqlite3.connect("opUsers_db.db")
+        #self.connection.row_factory = dict_factory
+        urllib.parse.uses_netloc.append("postgres")
+        url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+        self.connection = psycopg2.connect(
+            cursor_factory=psycopg2.extras.RealDictCursor,
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
         self.cursor = self.connection.cursor()
 
     def addUser(self, fisrtname, lastname, email, encrypted_password): 
