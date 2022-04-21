@@ -162,7 +162,6 @@ class myRequestHandler(BaseHTTPRequestHandler):
         email = parsed_body["email"][0]
         password = parsed_body["password"][0]
         db = userDB()
-        allRecords = db.readAllUsers()
         encrypted_password = bcrypt.hash(password)
         if db.findUserEmail(email) != None:
             self.send_response(409)
