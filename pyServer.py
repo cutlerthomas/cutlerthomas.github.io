@@ -61,6 +61,7 @@ class myRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         #write to the "wfile" response body
         db = opDB()
+        db.createCharsTable()
         allRecords = db.readAllChars()
         self.wfile.write(bytes(json.dumps(allRecords), "utf-8"))
 
@@ -81,6 +82,7 @@ class myRequestHandler(BaseHTTPRequestHandler):
         op_affiliation = parsed_body["affiliation"][0]
         op_df = parsed_body["df"][0]
         db = opDB()
+        db.createCharsTable()
         allRecords = db.readAllChars()
         if op_name in allRecords:
             self.send_response(409)
