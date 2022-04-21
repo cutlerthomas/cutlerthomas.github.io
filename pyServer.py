@@ -160,7 +160,7 @@ class myRequestHandler(BaseHTTPRequestHandler):
         firstname = parsed_body["firstname"][0]
         lastname = parsed_body["lastname"][0]
         email = parsed_body["email"][0]
-        password = parsed_body["password"][0]
+        password = parsed_body["encrypted_password"][0]
         db = userDB()
         db.createUsersTable()
         encrypted_password = bcrypt.hash(password)
@@ -181,7 +181,7 @@ class myRequestHandler(BaseHTTPRequestHandler):
         parsed_body = parse_qs(request_body)
         print("the parsed request body:", parsed_body)
         email = parsed_body["email"][0]
-        password = parsed_body["password"][0]
+        password = parsed_body["encrypted_password"][0]
         db = userDB()
         user = db.findUserEmail(email)
         if user != None:
