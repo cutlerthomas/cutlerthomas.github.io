@@ -181,7 +181,7 @@ class myRequestHandler(BaseHTTPRequestHandler):
         parsed_body = parse_qs(request_body)
         print("the parsed request body:", parsed_body)
         email = parsed_body["email"][0]
-        password = parsed_body["encrypted_password"][0]
+        password = parsed_body["password"][0]
         db = userDB()
         user = db.findUserEmail(email)
         if user != None:
