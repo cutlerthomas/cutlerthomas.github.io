@@ -39,7 +39,7 @@ class opDB:
 
     def createCharsTable(self):
         #create new char table in database
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS chars (id SERIAL PRIMARY KEY, name TEXT, age INT, height TEXT, weight TEXT, affiliation TEXT, df TEXT)")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS opChars (id SERIAL PRIMARY KEY, name TEXT, age INT, height TEXT, weight TEXT, affiliation TEXT, df TEXT)")
         self.connection.commit()
 
     def addChar(self, name, age, height, weight, df, affiliation): 
