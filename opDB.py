@@ -109,5 +109,5 @@ class userDB:
 
     def createUsersTable(self):
         #create new char table in database
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, firstname TEXT, lastname TEXT, email TEXT, encrypted_password TEXT)")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS opUsers (id SERIAL PRIMARY KEY, firstname TEXT, lastname TEXT, email TEXT, encrypted_password TEXT)")
         self.connection.commit()
