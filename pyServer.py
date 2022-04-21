@@ -160,7 +160,7 @@ class myRequestHandler(BaseHTTPRequestHandler):
         firstname = parsed_body["firstname"][0]
         lastname = parsed_body["lastname"][0]
         email = parsed_body["email"][0]
-        password = parsed_body["encrypted_password"][0]
+        password = parsed_body["password"][0]
         db = userDB()
         allRecords = db.readAllUsers()
         encrypted_password = bcrypt.hash(password)
