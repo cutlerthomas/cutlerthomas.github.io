@@ -1,6 +1,6 @@
 console.log("One Piece database");
 var n = 1;
-var url = "http://localhost:8080/";
+var url = "https://morning-tor-15224.herokuapp.com/";
 var listDiv = document.getElementById("favList");
 var ul = document.createElement("ul");
 var add = document.querySelector("#my-button");
